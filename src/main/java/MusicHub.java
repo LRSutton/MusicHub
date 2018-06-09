@@ -9,10 +9,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.Map;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,9 +30,9 @@ public class MusicHub {
 	 * @throws InvalidUsageException - Thrown if app usage is not adhered to
 	 * @throws IOException - Thrown if data file is not found or if it has a parsing error.
 	 */
-	public static void main (final String[] args) throws InvalidUsageException, IOException {
+	public static void main (final String[] args) throws Exception {
 		if (args.length != 2) {
-			throw new InvalidUsageException("Usage: ./gradlew <Full Path to Input Data File> <Full Path to Output Data File>");
+			throw new Exception("Usage: java MusicHub <Full Path to Input Data File> <Full Path to Output Data File>");
 		}
 		final Path inputPath = Paths.get(args[0]);
 		final Path outputPath = Paths.get(args[1]);
@@ -47,7 +48,7 @@ public class MusicHub {
 		// Stretching my legs with Java 8 streams...
 		final List<String> results =
 				// Convert read lines from file to stream
-				fileLines.stream()
+				fileLines.parallelStream()
 				// Split each line into separate artists
 				.map(l -> l.split(","))
 				// Call method to convert artist groups into tuples of artist pairs
@@ -82,7 +83,7 @@ public class MusicHub {
 	/*
 	 * Function for converting 2 artists to a hash ID (idempotent regardless of artist ordering)
 	 */
-	public Hasher<String> setHash = (s1,s2) -> new HashSet<String>(Arrays.asList(s1,s2)).hashCode();
+	public BiFunction<String,String,Integer> setHash = (s1,s2) -> new HashSet<String>(Arrays.asList(s1,s2)).hashCode();
 
 	/*
 	 * Convert an array of artist names into a list of integer-based tuples
@@ -96,7 +97,7 @@ public class MusicHub {
 			final String artist = artists[loopIndex];
 			while (tupleIndex < artists.length) {
 				final String other = artists[tupleIndex];
-				final int hash = setHash.hash(artist, other);
+				final int hash = setHash.apply(artist, other);
 				if (!pairs.containsKey(hash)) {
 					pairs.put(hash, String.format("%s,%s", artist,other));
 				}
