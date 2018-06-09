@@ -25,9 +25,9 @@ public class MusicHub {
 	private final ConcurrentMap<Integer,String> pairs = new ConcurrentHashMap<Integer,String>();
 
 	/**
-	 *
-	 * @param args
-	 * @throws InvalidUsageException - Thrown if app usage is not adhered to
+	 * Main loop
+	 * @param args - 0 = Input File; 1 = Output File
+	 * @throws Exception - Thrown if app usage is not adhered to
 	 * @throws IOException - Thrown if data file is not found or if it has a parsing error.
 	 */
 	public static void main (final String[] args) throws Exception {
@@ -92,6 +92,14 @@ public class MusicHub {
 		final List<Integer> tuples = new ArrayList<Integer>();
 		int loopIndex = 0;
 
+		/* 
+		 * The following loops through each artist in the array and 
+		 * then pairs them with all artists still left in the list. 
+		 * This creates a tuple of each pair of artists. Then the pair 
+		 * is registered to our map so we can look up artist names 
+		 * later. The pair is then hashed and the hash is stored in the
+		 * "tuples" list. 
+		 */
 		while (loopIndex < artists.length) {
 			int tupleIndex = loopIndex + 1;
 			final String artist = artists[loopIndex];
