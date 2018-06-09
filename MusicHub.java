@@ -10,9 +10,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  */
 public class MusicHub {
 	final private static Charset ENCODING = Charset.forName("UTF-8");
-	private final Map<Integer,String> pairs = new HashMap<Integer,String>();
+	private final ConcurrentMap<Integer,String> pairs = new ConcurrentHashMap<Integer,String>();
 
 	/**
 	 *

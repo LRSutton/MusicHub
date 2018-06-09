@@ -32,6 +32,8 @@ Assuming a successful build from the previous step...
 java MusicHub <input file> <output file>
 ```
 
+(Locally, on a MacBook Pro (Mid-2013) the application runs in about 1.4 seconds. (1.7 seconds when using synchronous streams).
+
 ## Notes
 1. Application will refuse to overwrite existing files
 
